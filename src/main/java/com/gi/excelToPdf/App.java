@@ -192,7 +192,13 @@ public class App {
                 e.printStackTrace();
             }
         }
-        paragraph.setFontSize(cellStyle.getFont().getFontHeightInPoints());
+
+        float rowHeight = rowHeightInPoints * 0.77f;
+        float fontSize = cellStyle.getFont().getFontHeightInPoints();
+        if (fontSize + 3f > rowHeight) {
+            fontSize = (float) Math.floor(rowHeight) - 3f;
+        }
+        paragraph.setFontSize(fontSize);
         if (cellStyle.getFont().getBold()) {
             paragraph.setBold();
         }
@@ -203,13 +209,10 @@ public class App {
 
         setAlignment(pdfCell, paragraph, cellStyle);
         setCellBorder(xlsCell, pdfCell);
-
-        float height = rowHeightInPoints * 0.742f;
-        paragraph.setHeight(height);
         return pdfCell
                 .setBackgroundColor(getRgbColorObject(cellStyle.getFillForegroundXSSFColor()))
                 .add(paragraph)
-                .setHeight(height)
+                .setHeight(rowHeight)
                 .setMargins(0f, 0f, 0f, 0f)
                 .setPaddings(1.5f, 1.5f, 1.5f, 1.5f);
     }
@@ -365,10 +368,6 @@ public class App {
                     CellRenderer[] cellRenderers = rows.get(point.y);
 
                     com.itextpdf.kernel.geom.Rectangle rect = cellRenderers[point.x].getOccupiedAreaBBox();
-                    System.out.println(rect.getX() + "/" + rect.getY());
-                    System.out.println(rect.getTop() + "/" + rect.getBottom());
-                    System.out.println(rect.getLeft() + "/" + rect.getRight());
-                    System.out.println("*********");
                     ImageData imageData = ImageDataFactory.create(picture.getPictureData().getData());
 
                     Dimension dimension = picture.getImageDimension();
